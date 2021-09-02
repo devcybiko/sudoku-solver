@@ -71,26 +71,7 @@ class Puzzle:
     def uncalculate_gridno(self, gridno):
         return (gridno // 3) * 3, (gridno % 3) * 3
 
-    def is_row_candidate(self, row, digit):
-        # has_zero = False
-        # for col in range(0, 9):
-        #     cell = self.rows[row][col]
-        #     if cell == digit: return False
-        #     if cell == 0: has_zero = True
-        # return has_zero
-        return digit not in self.rows[row] and 0 in self.rows[row]
-
     def is_col_candidate(self, col, digit):
-        ### This optimization went from 2.10 secs to 0.02 secs
-        # has_zero = False
-        # row = 0
-        # while True:
-        #     cell = self.rows[row][col]
-        #     if cell == digit: return False
-        #     if cell == 0: has_zero = True
-        #     row += 1
-        #     if row == 9: break
-        # return has_zero
         cell0 = self.rows[0][col]
         cell1 = self.rows[1][col]
         cell2 = self.rows[2][col]
@@ -100,80 +81,21 @@ class Puzzle:
         cell6 = self.rows[6][col]
         cell7 = self.rows[7][col]
         cell8 = self.rows[8][col]
-        if cell0 and cell1 and cell2 and cell3 and cell4 and cell5 and cell6 and cell7 and cell8: return False
-        if cell1 == digit: return False
-        if cell2 == digit: return False
-        if cell3 == digit: return False
-        if cell4 == digit: return False
-        if cell5 == digit: return False
-        if cell6 == digit: return False
-        if cell7 == digit: return False
-        if cell8 == digit: return False
+        if digit in [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8]: return False
         return True
 
     def is_grid_candidate(self, row, col, digit):
-        gridno = self.calculate_gridno(row, col)
-        grid_row, grid_col = self.uncalculate_gridno(gridno)
-        # has_zero = False
-        # grid_rows = range(grid_row, grid_row + 3)
-        # grid_cols = range(grid_col, grid_col + 3)
-        # for irow in grid_rows:
-        #     for icol in grid_cols:
-        #         cell = self.rows[irow][icol]
-        #         if cell == digit: return False
-        #         if cell == 0: has_zero = True
-        # return has_zero
+        grid_row = (row // 3) * 3
+        grid_col = (col // 3) * 3
         grid_col_3 = grid_col+3
-        has_zero = (0 in self.rows[grid_row][grid_col:grid_col_3]) or (0 in self.rows[grid_row+1][grid_col:grid_col_3]) or (0 in self.rows[grid_row+2][grid_col:grid_col_3])
-        if not has_zero: return False
-        no_digit = (digit not in self.rows[grid_row][grid_col:grid_col_3]) and (digit not in self.rows[grid_row+1][grid_col:grid_col_3]) and (digit not in self.rows[grid_row+2][grid_col:grid_col_3])
-        return no_digit
-        # gr0 = grid_row
-        # gr1 = grid_row + 1
-        # gr2 = grid_row + 2
-        # gc0 = grid_col
-        # gc1 = grid_col + 1
-        # gc2 = grid_col + 2
-        # cell0 = self.rows[gr0][gc0]
-        # cell1 = self.rows[gr1][gc0]
-        # cell2 = self.rows[gr2][gc0]
-        # cell3 = self.rows[gr0][gc1]
-        # cell4 = self.rows[gr1][gc1]
-        # cell5 = self.rows[gr2][gc1]
-        # cell6 = self.rows[gr0][gc2]
-        # cell7 = self.rows[gr1][gc2]
-        # cell8 = self.rows[gr2][gc2]
-        
-        # if cell0 and cell1 and cell2 and cell3 and cell4 and cell5 and cell6 and cell7 and cell8: return False
-        # if cell1 == digit: return False
-        # if cell2 == digit: return False
-        # if cell3 == digit: return False
-        # if cell4 == digit: return False
-        # if cell5 == digit: return False
-        # if cell6 == digit: return False
-        # if cell7 == digit: return False
-        # if cell8 == digit: return False
-        # return True
+        has_digit = (digit in self.rows[grid_row][grid_col:grid_col_3]) or (digit in self.rows[grid_row+1][grid_col:grid_col_3]) or (digit in self.rows[grid_row+2][grid_col:grid_col_3])
+        return not has_digit
 
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
-
-        # the_row = self.get_row(row)
-        # row_counts = self.count_cells(the_row)
-        # if row_counts[digit] != 0: return False
-        if not self.is_row_candidate(row, digit): return False
-
-        # the_col = self.get_col(col)
-        # col_counts = self.count_cells(the_col)
-        # if col_counts[digit] != 0: return False
+        if digit in self.rows[row]: return False
         if not self.is_col_candidate(col, digit): return False
-
-        # gridno = self.calculate_gridno(row, col)
-        # the_grid = self.get_grid(gridno)
-        # grid_counts = self.count_cells(the_grid)
-        # if grid_counts[digit] != 0: return False
         if not self.is_grid_candidate(row, col, digit): return False
-
         return True
     
     def get_candidates(self, row, col):
@@ -211,7 +133,19 @@ class Puzzle:
         return irow, icol
 
     def is_solved(self):
+        col_sum = [0,0,0,0,0,0,0,0,0]
         for irow in range(0, 9):
+            row_sum = 0
             for icol in range(0, 9):
-                if self.get(irow, icol) == 0: return False
+                cell = self.get(irow, icol) 
+                if cell == 0: return False
+                row_sum += cell
+                col_sum[icol] += cell
+            if row_sum != 45:
+                print("ERROR: row_sum["+str(irow)+"] = " + str(row_sum))
+                return False
+        for icol in range(0,9):
+            if col_sum[icol] != 45:
+                print("ERROR: col_sum["+str(icol)+"] = " + str(col_sum[icol]))
+                return False
         return True

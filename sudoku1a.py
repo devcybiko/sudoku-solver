@@ -49,5 +49,6 @@ def main():
         puzzle.print() 
         print(fname + " solved in " + delta + " secs")
     print("\n")
+    if not puzzle.is_solved(): print("ERROR: Sanity Check Failed")
 
 main()
