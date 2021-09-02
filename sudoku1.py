@@ -22,6 +22,7 @@ def main():
     print("\n")
     print(fname)
     puzzle.print()
+    print("\n")
     then = time.time()
     solved = solve(puzzle, 0, 0)
     now = time.time()
