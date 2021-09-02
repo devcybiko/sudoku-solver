@@ -24,6 +24,7 @@ def solve(puzzle: Puzzle, row, col):
     print(row, col, candidates)
     orig_digit = puzzle.get(row, col)
     for candidate in candidates:
+        if not puzzle.is_candidate(row, col, candidate): continue
         puzzle.set(row, col, candidate)
         if next_row >= 9: return True
         solved = solve(puzzle, next_row, next_col)

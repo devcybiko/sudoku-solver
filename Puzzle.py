@@ -78,10 +78,10 @@ class Puzzle:
         gridno = self.calculate_gridno(row, col)
         the_grid = self.get_grid(gridno)
         row_counts = self.count_cells(the_row)
-        col_counts = self.count_cells(the_row)
-        grid_counts = self.count_cells(the_row)
         if self.count_cells(the_row)[digit] != 0: return False
+        col_counts = self.count_cells(the_row)
         if self.count_cells(the_col)[digit] != 0: return False
+        grid_counts = self.count_cells(the_row)
         if self.count_cells(the_grid)[digit] != 0: return False
         return True
     
