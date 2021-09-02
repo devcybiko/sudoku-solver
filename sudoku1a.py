@@ -4,7 +4,7 @@ import sys
 import time
 
 """
-NOTE: This doesn't work
+NOTE: This is about twice as fast
 """
 
 candidate_cache = []
@@ -20,17 +20,15 @@ def calculate_candidate_cache(puzzle):
 def solve(puzzle: Puzzle, row, col):
     global candidate_cache
     next_row, next_col = puzzle.next_cell(row, col)
-    print("next", next_row, next_col)
     candidates = candidate_cache[row][col]
-    print(row, col, candidates)
     orig_digit = puzzle.get(row, col)
     for candidate in candidates:
-        print("trying", row, col, candidate)
+        if len(candidates) > 1 and not puzzle.is_candidate(row, col, candidate): continue
         puzzle.set(row, col, candidate)
         if next_row >= 9: return True
         solved = solve(puzzle, next_row, next_col)
         if solved: return True
-    puzzle.set(row, col, orig_digit)
+        puzzle.set(row, col, orig_digit)
     return False
 
 def main():

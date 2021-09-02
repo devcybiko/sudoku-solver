@@ -71,18 +71,54 @@ class Puzzle:
     def uncalculate_gridno(self, gridno):
         return (gridno // 3) * 3, (gridno % 3) * 3
 
+    def is_row_candidate(self, row, digit):
+        has_zero = False
+        for col in range(0, 9):
+            cell = self.rows[row][col]
+            if cell == digit: return False
+            if cell == 0: has_zero = True
+        return has_zero
+
+    def is_col_candidate(self, col, digit):
+        has_zero = False
+        for row in range(0,9):
+            cell = self.rows[row][col]
+            if cell == digit: return False
+            if cell == 0: has_zero = True
+        return has_zero
+
+    def is_grid_candidate(self, row, col, digit):
+        has_zero = False
+        gridno = self.calculate_gridno(row, col)
+        grid_row, grid_col = self.uncalculate_gridno(gridno)
+        grid_rows = range(grid_row, grid_row + 3)
+        grid_cols = range(grid_col, grid_col + 3)
+        for irow in grid_rows:
+            for icol in grid_cols:
+                cell = self.rows[irow][icol]
+                if cell == digit: return False
+                if cell == 0: has_zero = True
+        return has_zero
+
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
-        the_row = self.get_row(row)
-        the_col = self.get_col(col)
-        gridno = self.calculate_gridno(row, col)
-        the_grid = self.get_grid(gridno)
-        row_counts = self.count_cells(the_row)
-        if self.count_cells(the_row)[digit] != 0: return False
-        col_counts = self.count_cells(the_row)
-        if self.count_cells(the_col)[digit] != 0: return False
-        grid_counts = self.count_cells(the_row)
-        if self.count_cells(the_grid)[digit] != 0: return False
+
+        # the_row = self.get_row(row)
+        # row_counts = self.count_cells(the_row)
+        # if row_counts[digit] != 0: return False
+        if not self.is_row_candidate(row, digit): return False
+
+        # the_col = self.get_col(col)
+        # col_counts = self.count_cells(the_col)
+        # if col_counts[digit] != 0: return False
+        if not self.is_col_candidate(col, digit): return False
+
+        # gridno = self.calculate_gridno(row, col)
+        # the_grid = self.get_grid(gridno)
+        # grid_counts = self.count_cells(the_grid)
+        # if grid_counts[digit] != 0: return False
+        if not self.is_grid_candidate(row, col, digit): return False
+
         return True
     
     def get_candidates(self, row, col):
