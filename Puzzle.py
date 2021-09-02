@@ -81,6 +81,7 @@ class Puzzle:
         return digit not in self.rows[row] and 0 in self.rows[row]
 
     def is_col_candidate(self, col, digit):
+        ### This optimization went from 2.10 secs to 0.02 secs
         # has_zero = False
         # row = 0
         # while True:
@@ -90,7 +91,6 @@ class Puzzle:
         #     row += 1
         #     if row == 9: break
         # return has_zero
-        has_zero = True
         cell0 = self.rows[0][col]
         cell1 = self.rows[1][col]
         cell2 = self.rows[2][col]
@@ -128,6 +128,32 @@ class Puzzle:
         if not has_zero: return False
         no_digit = (digit not in self.rows[grid_row][grid_col:grid_col_3]) and (digit not in self.rows[grid_row+1][grid_col:grid_col_3]) and (digit not in self.rows[grid_row+2][grid_col:grid_col_3])
         return no_digit
+        # gr0 = grid_row
+        # gr1 = grid_row + 1
+        # gr2 = grid_row + 2
+        # gc0 = grid_col
+        # gc1 = grid_col + 1
+        # gc2 = grid_col + 2
+        # cell0 = self.rows[gr0][gc0]
+        # cell1 = self.rows[gr1][gc0]
+        # cell2 = self.rows[gr2][gc0]
+        # cell3 = self.rows[gr0][gc1]
+        # cell4 = self.rows[gr1][gc1]
+        # cell5 = self.rows[gr2][gc1]
+        # cell6 = self.rows[gr0][gc2]
+        # cell7 = self.rows[gr1][gc2]
+        # cell8 = self.rows[gr2][gc2]
+        
+        # if cell0 and cell1 and cell2 and cell3 and cell4 and cell5 and cell6 and cell7 and cell8: return False
+        # if cell1 == digit: return False
+        # if cell2 == digit: return False
+        # if cell3 == digit: return False
+        # if cell4 == digit: return False
+        # if cell5 == digit: return False
+        # if cell6 == digit: return False
+        # if cell7 == digit: return False
+        # if cell8 == digit: return False
+        # return True
 
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
