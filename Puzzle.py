@@ -36,23 +36,6 @@ class Puzzle:
             cells.append(self.rows[row][col])
         return cells
 
-    def get_grid(self, gridno):
-        cells = []
-        grid_row, grid_col = self.uncalculate_gridno(gridno)
-        grid_rows = range(grid_row, grid_row + 3)
-        grid_cols = range(grid_col, grid_col + 3)
-        for irow in grid_rows:
-            for icol in grid_cols:
-                cells.append(self.rows[irow][icol])
-        return cells
-
-    def count_cells(self, cells):
-        digits = [0,0,0,0,0,0,0,0,0,0]
-        for i in range(0,len(cells)): # iterate across the row
-            digit = cells[i] # get the digit
-            digits[digit] += 1 # count the number of times a digit is used
-        return digits
-
     def print(self):
         print("+ --- + --- + --- +")
         for irow in range(0,9):
@@ -64,12 +47,6 @@ class Puzzle:
                 if icol % 3 == 2: s += " | "
             print(s)
             if irow % 3 == 2: print("+ --- + --- + --- +")
-
-    def calculate_gridno(self, row, col):
-        return (row // 3) * 3 + (col // 3);
-    
-    def uncalculate_gridno(self, gridno):
-        return (gridno // 3) * 3, (gridno % 3) * 3
 
     def is_col_candidate(self, col, digit):
         cell0 = self.rows[0][col]
@@ -110,11 +87,6 @@ class Puzzle:
     
     def get(self, row, col):
         return self.rows[row][col]
-    
-    def update(self, row, col, digit):
-        if self.rows[row][col]: return False
-        self.rows[row][col] = digit
-        return True
     
     def set(self, row, col, digit):
         self.rows[row][col] = digit

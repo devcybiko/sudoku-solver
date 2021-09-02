@@ -35,38 +35,6 @@ class TestPuzzle(unittest.TestCase):
         for col in range(0, 9):
             cells = self.puzzle.get_col(col)
             self.assertEqual(cells, expected_cols_1[col])
-
-    def test_get_grid(self):
-        for grid in range(0, 9):
-            cells = self.puzzle.get_grid(grid)
-            self.assertEqual(cells, expected_grids_1[grid])
-
-    @data({"row": 0, "col": 0, "gridno": 0}, { "row": 0, "col": 1, "gridno": 0}, {"row": 0, "col": 2, "gridno": 0}, {"row": 0, "col": 3, "gridno": 1},
-    {"row": 2, "col":2, "gridno": 0}, {"row": 3, "col": 1, "gridno": 3}, {"row": 4, "col": 5, "gridno": 4}, {"row": 5, "col": 8, "gridno": 5},
-    {"row": 6, "col": 3, "gridno": 7}, {"row": 7, "col": 7, "gridno": 8})
-    def test_calculate_gridno(self, value):
-        gridno = self.puzzle.calculate_gridno(value["row"], value["col"])
-        self.assertEqual(gridno, value["gridno"])
-
-    @data(
-        {"row": 0, "col": 0, "gridno": 0}, {"row": 0, "col": 3, "gridno": 1}, {"row": 0, "col": 6, "gridno": 2}, 
-        {"row": 3, "col": 0, "gridno": 3}, {"row": 3, "col": 3, "gridno": 4}, {"row": 3, "col": 6, "gridno": 5}, 
-        {"row": 6, "col": 0, "gridno": 6}, {"row": 6, "col": 3, "gridno": 7}, {"row": 6, "col": 6, "gridno": 8})
-    def test_uncalculate_gridno(self, value):
-        row, col = self.puzzle.uncalculate_gridno(value["gridno"])
-        self.assertEqual(row, value["row"])
-        self.assertEqual(col, value["col"])
-
-    def test_count_cells(self):
-        the_row = self.puzzle.get_row(0)
-        counts = self.puzzle.count_cells(the_row)
-        self.assertEqual(counts, [5, 0, 1, 0, 1, 0, 1, 1, 0, 0])
-        the_col = self.puzzle.get_col(5)
-        counts = self.puzzle.count_cells(the_col)
-        self.assertEqual(counts, [7, 0, 1, 0, 0, 0, 0, 1, 0, 0])
-        the_grid = self.puzzle.get_grid(5)
-        counts = self.puzzle.count_cells(the_grid)
-        self.assertEqual(counts, [5, 0, 0, 0, 1, 1, 0, 0, 1, 1])
     
     @data([0, 0, 1, True], [0, 0, 7, False], [4, 4, 5, False], [5, 5, 5, True])
     @unpack
