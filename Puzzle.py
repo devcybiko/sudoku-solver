@@ -15,7 +15,7 @@ class Puzzle:
         for irow in range(0,len(rows)):
             row = rows[irow]
             newrow = []
-            if len(row) != 9: raise "bad puzzle format"
+            if len(row) != 9: raise "bad puzzle format - each row should be 9 characters"
             for icol in range(0, len(row)):
                 cell = row[icol]
                 if cell not in "0123456789-": raise "bad puzzle format - bad cell: " + cell
