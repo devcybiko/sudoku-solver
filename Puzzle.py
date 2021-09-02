@@ -72,33 +72,62 @@ class Puzzle:
         return (gridno // 3) * 3, (gridno % 3) * 3
 
     def is_row_candidate(self, row, digit):
-        has_zero = False
-        for col in range(0, 9):
-            cell = self.rows[row][col]
-            if cell == digit: return False
-            if cell == 0: has_zero = True
-        return has_zero
+        # has_zero = False
+        # for col in range(0, 9):
+        #     cell = self.rows[row][col]
+        #     if cell == digit: return False
+        #     if cell == 0: has_zero = True
+        # return has_zero
+        return digit not in self.rows[row] and 0 in self.rows[row]
 
     def is_col_candidate(self, col, digit):
-        has_zero = False
-        for row in range(0,9):
-            cell = self.rows[row][col]
-            if cell == digit: return False
-            if cell == 0: has_zero = True
-        return has_zero
+        # has_zero = False
+        # row = 0
+        # while True:
+        #     cell = self.rows[row][col]
+        #     if cell == digit: return False
+        #     if cell == 0: has_zero = True
+        #     row += 1
+        #     if row == 9: break
+        # return has_zero
+        has_zero = True
+        cell0 = self.rows[0][col]
+        cell1 = self.rows[1][col]
+        cell2 = self.rows[2][col]
+        cell3 = self.rows[3][col]
+        cell4 = self.rows[4][col]
+        cell5 = self.rows[5][col]
+        cell6 = self.rows[6][col]
+        cell7 = self.rows[7][col]
+        cell8 = self.rows[8][col]
+        if cell0 and cell1 and cell2 and cell3 and cell4 and cell5 and cell6 and cell7 and cell8: return False
+        if cell1 == digit: return False
+        if cell2 == digit: return False
+        if cell3 == digit: return False
+        if cell4 == digit: return False
+        if cell5 == digit: return False
+        if cell6 == digit: return False
+        if cell7 == digit: return False
+        if cell8 == digit: return False
+        return True
 
     def is_grid_candidate(self, row, col, digit):
-        has_zero = False
         gridno = self.calculate_gridno(row, col)
         grid_row, grid_col = self.uncalculate_gridno(gridno)
-        grid_rows = range(grid_row, grid_row + 3)
-        grid_cols = range(grid_col, grid_col + 3)
-        for irow in grid_rows:
-            for icol in grid_cols:
-                cell = self.rows[irow][icol]
-                if cell == digit: return False
-                if cell == 0: has_zero = True
-        return has_zero
+        # has_zero = False
+        # grid_rows = range(grid_row, grid_row + 3)
+        # grid_cols = range(grid_col, grid_col + 3)
+        # for irow in grid_rows:
+        #     for icol in grid_cols:
+        #         cell = self.rows[irow][icol]
+        #         if cell == digit: return False
+        #         if cell == 0: has_zero = True
+        # return has_zero
+        grid_col_3 = grid_col+3
+        has_zero = (0 in self.rows[grid_row][grid_col:grid_col_3]) or (0 in self.rows[grid_row+1][grid_col:grid_col_3]) or (0 in self.rows[grid_row+2][grid_col:grid_col_3])
+        if not has_zero: return False
+        no_digit = (digit not in self.rows[grid_row][grid_col:grid_col_3]) and (digit not in self.rows[grid_row+1][grid_col:grid_col_3]) and (digit not in self.rows[grid_row+2][grid_col:grid_col_3])
+        return no_digit
 
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
