@@ -20,11 +20,12 @@ def calculate_candidate_cache(puzzle):
 def solve(puzzle: Puzzle, row, col):
     global candidate_cache
     next_row, next_col = puzzle.next_cell(row, col)
+    print("next", next_row, next_col)
     candidates = candidate_cache[row][col]
     print(row, col, candidates)
     orig_digit = puzzle.get(row, col)
     for candidate in candidates:
-        if not puzzle.is_candidate(row, col, candidate): continue
+        print("trying", row, col, candidate)
         puzzle.set(row, col, candidate)
         if next_row >= 9: return True
         solved = solve(puzzle, next_row, next_col)
