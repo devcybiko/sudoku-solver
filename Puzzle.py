@@ -94,11 +94,12 @@ class Puzzle:
     
     def get_candidates(self, row, col):
         candidates = []
+        my_digit = self.get(row, col)
+        if my_digit != 0:
+            return [my_digit]
         for candidate in range(1,10):
             if self.is_candidate(row, col, candidate):
                 candidates.append(candidate)
-        my_digit = self.get(row, col)
-        if my_digit != 0: candidates.append(my_digit)
         return candidates
     
     def get(self, row, col):
