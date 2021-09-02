@@ -17,7 +17,7 @@ def solve(puzzle: Puzzle, row, col):
     return False
 
 def main():
-    fname = len(sys.argv) > 1 and sys.argv[1] or 'puzzle-1.json'
+    fname = len(sys.argv) > 1 and sys.argv[1] or 'puzzle-01.json'
     puzzle = Puzzle(fname)
     print("\n")
     print(fname)
