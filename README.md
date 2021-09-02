@@ -4,25 +4,31 @@ This is a quick hack to solve Sudoku puzzles. It uses a recursive descent / dept
 
 Each cell is visited and analyzed for possible candidates (looking horizontally, vertically, and in the subgrid to select digits that are not already represented).
 
-The first candidate is added to the puzzle and the next cell is visited (going from top to bottom, left to right). That cell also selects a list of candidates and tries its first one, recursively.
+The first candidate is added to the puzzle and the next cell is visited (working left to right, from top to bottom). That cell also selects a list of candidates and tries its first one, and calls the next cell, recursively.
 
 If we get to a place in the recursion where no candidates exist, or if a "child" cell returns a 'False', a False is returned and the "parent" (or previous) cell - which tries its next candidate.
 
 If a cell exhausts all its possible candidates, then it returns False to the parent which tries its next candidate and the process repeats.
 
+If the last cell is visited and it successfully places one of its candidates, the puzzle is considered 'solved' and a True is passed up to the parents, unwinding the recursion. The algorithm then halts. If other solutions are possible, this algorithm will not find them.
+
+**NOTE** The recursive code to solve the puzzle is in `sudoku1.py`. It rightly might belong in the `Puzzle.py` class. However, I wanted to isolate the solution code in its own file. Also, I am thinking of writing a non-recursive version and putting it in a separate source file.
+
 ## Installing
-* make -f Makefile install
+* `make install`
 
 ## Running unit tests / code coverage
-* make -f Makefile coverage
-* make -f Makefile report
+* `make coverage` - run all tests and code coverage
+* `make report` - generate HTML report on coverage
 
 ## Run it
-`./sudoku1.py <filename>`
-or
-`run-all.sh`
+* `./sudoku1.py <filename>`
 
-## Some puzzles to try - some are very hard
+or
+
+* `run-all.sh`
+
+## Sample puzzles were from this link - some are very hard
 * https://www.rd.com/list/printable-sudoku-puzzles/
 
 ## Input file format
@@ -46,21 +52,14 @@ The input file is a JSON array of strings. Empty cells are represented by a sing
 * Makefile - makefile
 * Puzzle.py - Puzzle class (holds puzzle and its methods)
 * README.md - this file
-* puzzle-01.json
-* puzzle-02.json
-* puzzle-03.json
-* puzzle-04.json
-* puzzle-05.json
-* puzzle-06.json
-* puzzle-07.json
-* puzzle-08.json
-* puzzle-09.json
-* puzzle-10.json
+* puzzle-*.json - puzzle files
 * requirements.txt - required Python libraries
 * run-all.sh - script to run all puzzles
+* solved-01.json - a solved puzzle for unit tests
 * sudoku1.py - main code
 * tests/ - test cases
 
 ## Implementation notes
 1. In `Puzzle.get_candiates()` I return a single candidate if the cell is already occupied. While this introduces some inefficiencies, it greatly simplified the recursion
 
+2. This is not necessarily a very efficient solution. I opted for clarity in the code over more optimal methods. For example, I could have iterated over every cell and computed the candidates (`Puzzle.get_candidates()`) once at the very beginning (rather than during the recursion) and reused them.

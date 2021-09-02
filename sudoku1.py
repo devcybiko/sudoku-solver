@@ -9,7 +9,7 @@ def solve(puzzle: Puzzle, row, col):
     for candidate in candidates:
         orig_digit = puzzle.get(row, col)
         puzzle.set(row, col, candidate)
-        if puzzle.solved(): return True
+        if puzzle.is_solved(): return True
         if next_row >= 9: continue
         solved = solve(puzzle, next_row, next_col)
         if solved: return True

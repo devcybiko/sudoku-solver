@@ -1,10 +1,6 @@
 import sys
 import json
 
-def _log(a="",b="",c="",d="",e=""):
-    print(a,b,c,d,e)
-    pass
-
 class Puzzle:
     def __init__(self, fname):
         self.rows = self.read_puzzle(fname)
@@ -75,9 +71,6 @@ class Puzzle:
     def uncalculate_gridno(self, gridno):
         return (gridno // 3) * 3, (gridno % 3) * 3
 
-    def is_candidate_row(self, row, col):
-        if the_row[cell] !=0: return Fals
-
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
         the_row = self.get_row(row)
@@ -126,7 +119,7 @@ class Puzzle:
             if self.get(irow, icol) == 0: break
         return irow, icol
 
-    def solved(self):
+    def is_solved(self):
         for irow in range(0, 9):
             for icol in range(0, 9):
                 if self.get(irow, icol) == 0: return False

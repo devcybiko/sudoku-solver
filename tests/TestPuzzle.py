@@ -21,6 +21,7 @@ expected_grids_1 = [
 class TestPuzzle(unittest.TestCase):
     def setUp(self):
         self.puzzle = Puzzle("puzzle-01.json")
+        self.solved = Puzzle("solved-01.json")
 
     def test_loaded(self):
         self.assertEqual(self.puzzle.rows, expected_rows_1)
@@ -87,4 +88,8 @@ class TestPuzzle(unittest.TestCase):
         self.assertEqual(result_col, expected_col)
 
     def test_solve(self): 
-        self.puzzle.
+        result = self.solved.is_solved()
+        self.assertEqual(result, True)
+
+    def test_print(self): 
+        result = self.puzzle.print()
