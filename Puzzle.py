@@ -24,18 +24,6 @@ class Puzzle:
             newrows.append(newrow)
         return newrows
 
-    def get_row(self,row):
-        cells = []
-        for i in range(0,9):
-            cells.append(self.rows[row][i])
-        return cells
-
-    def get_col(self, col):
-        cells = []
-        for row in range(0,9):
-            cells.append(self.rows[row][col])
-        return cells
-
     def print(self):
         print("+ --- + --- + --- +")
         for irow in range(0,9):

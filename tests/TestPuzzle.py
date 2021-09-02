@@ -26,16 +26,6 @@ class TestPuzzle(unittest.TestCase):
     def test_loaded(self):
         self.assertEqual(self.puzzle.rows, expected_rows_1)
 
-    def test_get_row(self):
-        for row in range(0, 9):
-            cells = self.puzzle.get_row(row)
-            self.assertEqual(cells, expected_rows_1[row])
-
-    def test_get_col(self):
-        for col in range(0, 9):
-            cells = self.puzzle.get_col(col)
-            self.assertEqual(cells, expected_cols_1[col])
-    
     @data([0, 0, 1, True], [0, 0, 7, False], [4, 4, 5, False], [5, 5, 5, True])
     @unpack
     def test_is_candidate(self, row, col, digit, expected):
