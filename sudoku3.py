@@ -4,6 +4,9 @@ import sys
 import time
 
 """
+We optimize by calculating all the candidates at the beginning of the process
+Rather than calculate the candidates on each recursion
+
 NOTE: This is about twice as fast
 """
 
@@ -23,7 +26,12 @@ def solve(puzzle: Puzzle, row, col):
     candidates = candidate_cache[row][col]
     orig_digit = puzzle.get(row, col)
     for candidate in candidates:
-        if len(candidates) > 1 and not puzzle.is_candidate(row, col, candidate): continue
+        if len(candidates) > 1 and not puzzle.is_candidate(row, col, candidate):
+            # if there's only one candidate - it's the original 'fixed' value in the puzzle
+            # we assume this is a valid candidate and proceed with the recursion
+            # this is an optimization / simplification
+            # otherwise, we'd have to keep track of 'fixed' values and do special case processing
+            continue
         puzzle.set(row, col, candidate)
         if next_row >= 9: return True
         solved = solve(puzzle, next_row, next_col)
