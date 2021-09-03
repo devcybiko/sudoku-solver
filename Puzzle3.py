@@ -1,5 +1,16 @@
 import json
 
+"""
+even more optimized solution
+we gain a small benefit by keeping three versions of the puzzle
+- row-major form
+- col-major form
+- grid translate table
+
+this allows us to use the `in` operator on arrays of values
+which is much faster than iteration or even literal lookups
+"""
+
 class Puzzle:
     def __init__(self, fname):
         self.xlate_row, self.xlate_col = self.build_grid_xlate_table()

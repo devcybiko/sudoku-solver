@@ -1,5 +1,10 @@
 import json
 
+"""
+Naive solution - we collect a grouping of cells and count how many times each digit occurs
+Very slow
+"""
+
 class Puzzle:
     def __init__(self, fname):
         self.rows = self.read_puzzle(fname)

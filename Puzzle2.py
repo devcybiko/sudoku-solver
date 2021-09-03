@@ -1,5 +1,12 @@
 import json
 
+"""
+optimized solution
+we look at only the cells we need to 
+and take advantage of literal array access
+rather than looping
+"""
+
 class Puzzle:
     def __init__(self, fname):
         self.rows = self.read_puzzle(fname)
