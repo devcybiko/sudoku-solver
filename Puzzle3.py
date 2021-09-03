@@ -9,6 +9,9 @@ we gain a small benefit by keeping three versions of the puzzle
 
 this allows us to use the `in` operator on arrays of values
 which is much faster than iteration or even literal lookups
+
+however there is an increased cost to maintain three tables
+
 """
 
 class Puzzle:
