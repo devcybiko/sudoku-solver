@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from Puzzle import Puzzle 
+from Puzzle1 import Puzzle 
 import sys
 import time
 

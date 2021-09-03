@@ -2,11 +2,14 @@ import json
 
 class Puzzle:
     def __init__(self, fname):
-        self.rows = self.read_puzzle(fname)
+        self.xlate_row, self.xlate_col = self.build_grid_xlate_table()
+        self.rows, self.cols, self.grid = self.read_puzzle(fname)
         pass
 
     def read_puzzle(self, fname):
         newrows = []
+        newcols = [[],[],[],[],[],[],[],[],[]]
+        newgrid = [[],[],[],[],[],[],[],[],[]]
         f = open(fname)
         rows = json.load(f)
         f.close()
@@ -20,8 +23,11 @@ class Puzzle:
                 if cell not in "0123456789-": raise "bad puzzle format - bad cell: " + cell
                 if cell == '-' or cell == '.' : cell = '0'
                 newrow.append(int(cell))
+                newcols[icol].append(int(cell))
+                grid_row = self.xlate_row[irow][icol]
+                newgrid[grid_row].append(int(cell))
             newrows.append(newrow)
-        return newrows
+        return newrows, newcols, newgrid
 
     def print(self):
         print("+ --- + --- + --- +")
@@ -35,31 +41,23 @@ class Puzzle:
             print(s)
             if irow % 3 == 2: print("+ --- + --- + --- +")
 
-    def is_col_candidate(self, col, digit):
-        cell0 = self.rows[0][col]
-        cell1 = self.rows[1][col]
-        cell2 = self.rows[2][col]
-        cell3 = self.rows[3][col]
-        cell4 = self.rows[4][col]
-        cell5 = self.rows[5][col]
-        cell6 = self.rows[6][col]
-        cell7 = self.rows[7][col]
-        cell8 = self.rows[8][col]
-        if digit in [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8]: return False
-        return True
-
-    def is_grid_candidate(self, row, col, digit):
-        grid_row = (row // 3) * 3
-        grid_col = (col // 3) * 3
-        grid_col_3 = grid_col+3
-        has_digit = (digit in self.rows[grid_row][grid_col:grid_col_3]) or (digit in self.rows[grid_row+1][grid_col:grid_col_3]) or (digit in self.rows[grid_row+2][grid_col:grid_col_3])
-        return not has_digit
+    def build_grid_xlate_table(self):
+        xlate_row = [[],[],[],[],[],[],[],[],[]]
+        xlate_col = [[],[],[],[],[],[],[],[],[]]
+        grid_row = '000111222000111222000111222333444555333444555333444555666777888666777888666777888'
+        grid_col = '012012012345345345678678678012012012345345345678678678012012012345345345678678678'
+        for i in range(0,81):
+            row = i // 9
+            col = i % 9
+            xlate_row[row].append(int(grid_row[i]))
+            xlate_col[col].append(int(grid_col[i]))
+        return xlate_row, xlate_col
 
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
         if digit in self.rows[row]: return False
-        if not self.is_col_candidate(col, digit): return False
-        if not self.is_grid_candidate(row, col, digit): return False
+        if digit in self.cols[col]: return False
+        if digit in self.grid[self.xlate_row[row][col]]: return False
         return True
     
     def get_candidates(self, row, col):
@@ -77,6 +75,8 @@ class Puzzle:
     
     def set(self, row, col, digit):
         self.rows[row][col] = digit
+        self.cols[col][row] = digit
+        self.grid[self.xlate_row[row][col]][self.xlate_col[row][col]] = digit
 
     def next_cell(self, row, col):
         irow = row

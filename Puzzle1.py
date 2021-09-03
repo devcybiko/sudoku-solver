@@ -1,4 +1,3 @@
-import sys
 import json
 
 class Puzzle:
@@ -15,7 +14,7 @@ class Puzzle:
         for irow in range(0,len(rows)):
             row = rows[irow]
             newrow = []
-            if len(row) != 9: raise "bad puzzle format - each row should be 9 characters"
+            if len(row) != 9: raise "bad puzzle format"
             for icol in range(0, len(row)):
                 cell = row[icol]
                 if cell not in "0123456789-": raise "bad puzzle format - bad cell: " + cell
@@ -23,6 +22,35 @@ class Puzzle:
                 newrow.append(int(cell))
             newrows.append(newrow)
         return newrows
+
+    def get_row(self,row):
+        cells = []
+        for i in range(0,9):
+            cells.append(self.rows[row][i])
+        return cells
+
+    def get_col(self, col):
+        cells = []
+        for row in range(0,9):
+            cells.append(self.rows[row][col])
+        return cells
+
+    def get_grid(self, gridno):
+        cells = []
+        grid_row, grid_col = self.uncalculate_gridno(gridno)
+        grid_rows = range(grid_row, grid_row + 3)
+        grid_cols = range(grid_col, grid_col + 3)
+        for irow in grid_rows:
+            for icol in grid_cols:
+                cells.append(self.rows[irow][icol])
+        return cells
+
+    def count_cells(self, cells):
+        digits = [0,0,0,0,0,0,0,0,0,0]
+        for i in range(0,len(cells)): # iterate across the row
+            digit = cells[i] # get the digit
+            digits[digit] += 1 # count the number of times a digit is used
+        return digits
 
     def print(self):
         print("+ --- + --- + --- +")
@@ -36,31 +64,24 @@ class Puzzle:
             print(s)
             if irow % 3 == 2: print("+ --- + --- + --- +")
 
-    def is_col_candidate(self, col, digit):
-        cell0 = self.rows[0][col]
-        cell1 = self.rows[1][col]
-        cell2 = self.rows[2][col]
-        cell3 = self.rows[3][col]
-        cell4 = self.rows[4][col]
-        cell5 = self.rows[5][col]
-        cell6 = self.rows[6][col]
-        cell7 = self.rows[7][col]
-        cell8 = self.rows[8][col]
-        if digit in [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8]: return False
-        return True
-
-    def is_grid_candidate(self, row, col, digit):
-        grid_row = (row // 3) * 3
-        grid_col = (col // 3) * 3
-        grid_col_3 = grid_col+3
-        has_digit = (digit in self.rows[grid_row][grid_col:grid_col_3]) or (digit in self.rows[grid_row+1][grid_col:grid_col_3]) or (digit in self.rows[grid_row+2][grid_col:grid_col_3])
-        return not has_digit
+    def calculate_gridno(self, row, col):
+        return (row // 3) * 3 + (col // 3);
+    
+    def uncalculate_gridno(self, gridno):
+        return (gridno // 3) * 3, (gridno % 3) * 3
 
     def is_candidate(self, row, col, digit):
         if self.rows[row][col] != 0: return False
-        if digit in self.rows[row]: return False
-        if not self.is_col_candidate(col, digit): return False
-        if not self.is_grid_candidate(row, col, digit): return False
+        the_row = self.get_row(row)
+        the_col = self.get_col(col)
+        gridno = self.calculate_gridno(row, col)
+        the_grid = self.get_grid(gridno)
+        row_counts = self.count_cells(the_row)
+        col_counts = self.count_cells(the_row)
+        grid_counts = self.count_cells(the_row)
+        if self.count_cells(the_row)[digit] != 0: return False
+        if self.count_cells(the_col)[digit] != 0: return False
+        if self.count_cells(the_grid)[digit] != 0: return False
         return True
     
     def get_candidates(self, row, col):
@@ -75,6 +96,11 @@ class Puzzle:
     
     def get(self, row, col):
         return self.rows[row][col]
+    
+    def update(self, row, col, digit):
+        if self.rows[row][col]: return False
+        self.rows[row][col] = digit
+        return True
     
     def set(self, row, col, digit):
         self.rows[row][col] = digit
@@ -93,19 +119,7 @@ class Puzzle:
         return irow, icol
 
     def is_solved(self):
-        col_sum = [0,0,0,0,0,0,0,0,0]
         for irow in range(0, 9):
-            row_sum = 0
             for icol in range(0, 9):
-                cell = self.get(irow, icol) 
-                if cell == 0: return False
-                row_sum += cell
-                col_sum[icol] += cell
-            if row_sum != 45:
-                print("ERROR: row_sum["+str(irow)+"] = " + str(row_sum))
-                return False
-        for icol in range(0,9):
-            if col_sum[icol] != 45:
-                print("ERROR: col_sum["+str(icol)+"] = " + str(col_sum[icol]))
-                return False
+                if self.get(irow, icol) == 0: return False
         return True
